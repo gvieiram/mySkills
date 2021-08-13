@@ -5,22 +5,24 @@ import {
     StyleSheet,
     TextInput,
     Platform,
-    TouchableOpacity
+    FlatList
 } from 'react-native';
+
+import { Button } from '../components/Button';
+import { SkillCard } from '../components/SkillCard';
 
 export function Home(){
   const [newSkill, setNewSkill] = useState('');
-  const [mySkill, setMySkill] = useState([]);
+  const [mySkills, setMySkills] = useState([]);
 
-  function handleAddNewSkill() {
-    setMySkill(oldState => [...oldState, newSkill])
-    // setNewSkill('')
+  function handleAddNewSkill(){
+    setMySkills(oldState => [...oldState, newSkill]);
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-          Bem-Vindo, Gustavo
+          Bem-vindo, Gustavo
       </Text>
 
       <TextInput
@@ -30,28 +32,20 @@ export function Home(){
           onChangeText={setNewSkill}
       />
 
-      <TouchableOpacity
-          style={styles.button}
-          activeOpacity={.7}
-          onPress={handleAddNewSkill}
-      >
-          <Text style={styles.buttonText}>Adicionar</Text>
-      </TouchableOpacity>
+      <Button onPress={handleAddNewSkill} />
 
-      <Text style={[styles.title, { marginTop: 50 }]}>
+      <Text style={[styles.title, { marginVertical: 50}]}>
           Minhas Skills
       </Text>
 
-      {
-        mySkill.map(skill => (
-        <TouchableOpacity key={skill} style={styles.buttonSkill}>
-          <Text style={styles.textSkill}>
-              {skill}
-          </Text>
-        </TouchableOpacity>
-        ))
-      }
-
+      <FlatList
+          showsVerticalScrollIndicator={false}
+          data={mySkills}
+          keyExtractor={item => item}
+          renderItem={({ item }) => (
+              <SkillCard skill={item}/>
+          )}
+      />
 
     </View>
   )
@@ -62,7 +56,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121015',
         paddingHorizontal: 20,
-        paddingVertical: 50,
+        paddingVertical: 70,
         paddingHorizontal: 30
     },
     title: {
@@ -78,28 +72,4 @@ const styles = StyleSheet.create({
         marginTop: 30,
         borderRadius: 7
     },
-    button: {
-        backgroundColor: '#A370F7',
-        padding: 15,
-        borderRadius: 7,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    buttonText: {
-        color: '#FFF',
-        fontSize: 17,
-        fontWeight: 'bold',
-      },
-      buttonSkill: {
-          backgroundColor: '#1F1E25',
-          padding: 15,
-          borderRadius: 50,
-          alignItems: 'center',
-          marginVertical: 10
-      },
-      textSkill: {
-          color: '#FFF',
-          fontSize: 22,
-          fontWeight: 'bold',
-      }
-})
+});
